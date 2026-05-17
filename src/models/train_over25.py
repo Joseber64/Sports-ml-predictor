@@ -1,16 +1,18 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score
 import joblib
+import os
+
+from xgboost import XGBClassifier
+from sklearn.model_selection import train_test_split
+
+os.makedirs("models", exist_ok=True)
 
 df = pd.read_csv("data/processed/model_data.csv")
 
 X = df[[
-    "goal_difference",
-    "total_goals",
-    "home_points",
-    "away_points"
+    "home_form",
+    "away_form",
+    "attack_strength"
 ]]
 
 y = df["over_2_5"]
@@ -26,13 +28,9 @@ model = XGBClassifier()
 
 model.fit(X_train, y_train)
 
-preds = model.predict(X_test)
-
-acc = accuracy_score(y_test, preds)
-
-print("Accuracy:", acc)
-
 joblib.dump(
     model,
-    "models/over25_model.pkl"
+    "models/model_over25.pkl"
 )
+
+print("Over 2.5 model trained")
