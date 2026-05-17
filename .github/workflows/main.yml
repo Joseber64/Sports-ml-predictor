@@ -1,7 +1,11 @@
-name: Soccer Predictor
+name: Soccer ML Predictor
 
 on:
+
   workflow_dispatch:
+
+  schedule:
+    - cron: "0 */12 * * *"
 
 jobs:
 
@@ -11,7 +15,7 @@ jobs:
 
     steps:
 
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -33,8 +37,20 @@ jobs:
       - name: Feature engineering
         run: python src/features/feature_engineering.py
 
+      - name: Train 1X2
+        run: python src/models/train_1x2.py
+
       - name: Train Over 2.5
         run: python src/models/train_over25.py
 
       - name: Train BTTS
         run: python src/models/train_btts.py
+
+      - name: Train Corners
+        run: python src/models/train_corners.py
+
+      - name: Train Cards
+        run: python src/models/train_cards.py
+
+      - name: Generate Predictions
+        run: python src/predictors/generate_predictions.py
