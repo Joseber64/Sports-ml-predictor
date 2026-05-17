@@ -1,0 +1,40 @@
+name: Soccer Predictor
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Collect matches
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: python src/collectors/matches_collector.py
+
+      - name: Create targets
+        run: python src/features/create_targets.py
+
+      - name: Feature engineering
+        run: python src/features/feature_engineering.py
+
+      - name: Train Over 2.5
+        run: python src/models/train_over25.py
+
+      - name: Train BTTS
+        run: python src/models/train_btts.py
