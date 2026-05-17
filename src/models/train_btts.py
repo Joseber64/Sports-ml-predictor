@@ -1,13 +1,18 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from lightgbm import LGBMClassifier
 import joblib
+import os
+
+from lightgbm import LGBMClassifier
+from sklearn.model_selection import train_test_split
+
+os.makedirs("models", exist_ok=True)
 
 df = pd.read_csv("data/processed/model_data.csv")
 
 X = df[[
-    "goal_difference",
-    "total_goals"
+    "home_form",
+    "away_form",
+    "attack_strength"
 ]]
 
 y = df["btts"]
@@ -25,7 +30,7 @@ model.fit(X_train, y_train)
 
 joblib.dump(
     model,
-    "models/btts_model.pkl"
+    "models/model_btts.pkl"
 )
 
 print("BTTS model trained")
