@@ -2,16 +2,21 @@ import pandas as pd
 
 df = pd.read_csv("data/processed/features.csv")
 
-df["goal_difference"] = (
-    df["home_goals"] - df["away_goals"]
+df["home_form"] = (
+    df["home_goals"] * 3
 )
 
-df["total_goals"] = (
-    df["home_goals"] + df["away_goals"]
+df["away_form"] = (
+    df["away_goals"] * 3
 )
 
-df["home_points"] = df["home_win"] * 3 + df["draw"]
-df["away_points"] = df["away_win"] * 3 + df["draw"]
+df["attack_strength"] = (
+    df["total_goals"] / 2
+)
+
+df["defense_strength"] = (
+    abs(df["goal_difference"])
+)
 
 df.to_csv(
     "data/processed/model_data.csv",
@@ -19,3 +24,4 @@ df.to_csv(
 )
 
 print(df.head())
+print("Feature engineering completed")
